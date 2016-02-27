@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Caldwell Etcd Manager</title>
+    <link href="bootstrap-3.3.6-dist/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        #main {
+            position: absolute;
+            left: 10px;
+            right: 10px;
+            top: 10px;
+            bottom: 10px;
+        }
+
+        #left {
+            float: left;
+            width: 160px;
+            padding: 8px;
+        }
+
+        #right {
+            float: left;
+            position: absolute;
+            left: 210px;
+            right: 0;
+            top: 0;
+            bottom: 50px;
+        }
+
+        #right-content {
+            background: #fff;
+            -webkit-border-radius: 2px;
+            margin: -5px 1px 0 -19px;
+            height: 100%;
+            overflow: auto;
+        }
+
+        #etcd-connection-url {
+            font-weight: bold;
+        }
+    </style>
+    <script src="js/jquery-2.2.0.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script src="js/app.js"></script>
+</head>
+<body>
+<div id="main">
+    <div id="left" class="well">
+        <ul id="left-nav" class="nav nav-list">
+            <li class="nav-header">Index</li>
+            <li class="active">
+                <a href="#" new-key-path="/"><i class="icon-white icon-home"></i> Home</a>
+            </li>
+            <li class="nav-header">Application</li>
+            <li class="divider"></li>
+            <li><a href="#" nw-call="about" onclick="App.about()"><i class="icon-flag"></i> About</a></li>
+        </ul>
+    </div>
+
+    <div id="right">
+        <div id="right-title-bar">
+            Connected to <span id="etcd-connection-url"></span>
+        </div>
+        <div id="right-address-bar" class="row">
+            <ul id="address-bar" class="breadcrumb"></ul>
+        </div>
+        <div id="right-content" class="row">
+            <ul style="margin: 5px;" id="right-content-value"></ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>

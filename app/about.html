@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>About Caldwell Etcd Manager</title>
+    <style type="text/css">
+        html, body, .body {
+            overflow: hidden;
+            text-align: center;
+            font-family: sans-serif;
+        }
+
+        a {
+            font-size: 16px;
+        }
+    </style>
+    <script src="js/jquery-2.2.0.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+    <script>
+        var shell = require('shell');
+
+        $(document).ready(function () {
+            $(document).find('a').bind('click', function (e) {
+                e.preventDefault();
+                shell.openExternal('https://github.com/farvour/caldwell-etcd');
+            })
+        });
+    </script>
+</head>
+<body>
+<div class="body">
+    <h1>Caldwell Etcd Manager</h1>
+    <div>
+        <a href="https://github.com/farvour/caldwell-etcd">https://github.com/farvour/caldwell-etcd</a>
+    </div>
+    <div>
+        We are using node:
+        <script>
+            document.write(process.versions.node)
+        </script>
+    </div>
+    <div>
+        Chrome:
+        <script>
+            document.write(process.versions.chrome)
+        </script>
+    </div>
+    <div>
+        Electron:
+        <script>
+            document.write(process.versions.electron)
+        </script>
+    </div>
+</div>
+</body>
+</html>

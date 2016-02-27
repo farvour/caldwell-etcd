@@ -1,0 +1,40 @@
+{
+  "name": "caldwell",
+  "description": "An appliation to manage keys and values in an etcd cluster.",
+  "author": "Thomas Farvour <tom@farvour.com>",
+  "license": "MIT",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "electron ./main.js",
+    "dev": "electron .",
+    "clean": "rm -rf ./build && npm run clean:osx",
+    "clean:osx": "rm -rf ./dist/osx",
+    "pack": "npm run clean && npm run pack:osx",
+    "pack:osx": "electron-packager . Caldwell --platform=darwin --arch=x64 --version=0.36.7 --icon=./assets/osx/Caldwell.icns --out=./dist --ignore=./dist",
+    "build": "npm run build:osx",
+    "build:osx": "npm run pack:osx && electron-builder ./dist/Caldwell-darwin-x64/Caldwell.app --platform=osx --out=\"dist/osx\" --config=./config.json"
+  },
+  "main": "main.js",
+  "keywords": [
+    "Caldwell",
+    "Electron",
+    "etcd",
+    "editor"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/farvour/caldwell-etcd"
+  },
+  "bugs": {
+    "url": "https://github.com/farvour/caldwell-etcd/issues"
+  },
+  "homepage": "https://github.com/farvour/caldwell-etcd/README.md",
+  "devDependencies": {
+    "electron-builder": "^2.7.2",
+    "electron-packager": "^5.2.1",
+    "electron-prebuilt": "^0.36.7"
+  },
+  "dependencies": {
+    "nconf": "^0.8.4"
+  }
+}

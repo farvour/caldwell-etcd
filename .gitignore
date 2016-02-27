@@ -1,0 +1,24 @@
+# Ignore log directories.
+logs
+
+# Ignore temporary directories and history.
+tmp
+.history
+
+# Ignore build temporary files.
+dist/
+out/
+target
+
+# Ignore other IDE settings.
+.idea
+*.iml
+/.idea_modules
+/.classpath
+/.project
+/RUNNING_PID
+/.settings
+
+# Ignore Node.js modules.
+node_modules/
+npm-debug.log
