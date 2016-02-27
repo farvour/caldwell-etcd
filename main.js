@@ -1,7 +1,7 @@
 'use strict';
 
 const electron = require('electron');
-const https = require('https');
+const http = require('http');
 
 /**
  * Module to control application life.
@@ -48,8 +48,12 @@ app.on('ready', function () {
     // Create the browser window.
     mainWindow = new BrowserWindow({title: 'Caldwell etcd Manager', width: 800, height: 600});
 
-    if (!configuration.readSettings('etcdBaseUrl')) {
-        configuration.saveSettings('etcdBaseUrl', 'localhost');
+    if (!configuration.readSettings('etcdHostname')) {
+        configuration.saveSettings('etcdHostname', 'localhost');
+    }
+
+    if (!configuration.readSettings('etcdPort')) {
+        configuration.saveSettings('etcdPort', 2379);
     }
 
     if (!configuration.readSettings('etcdHttps')) {
@@ -60,14 +64,15 @@ app.on('ready', function () {
         configuration.saveSettings('etcdKeysPath', '/v2/keys');
     }
 
-    var httpsOptions = {
-        hostname: configuration.readSettings('etcdBaseUrl'),
-        port: 443,
+    var httpOptions = {
+        protocol: configuration.readSettings('etcdHttps') ? 'https:' : 'http:',
+        hostname: configuration.readSettings('etcdHostname'),
+        port: configuration.readSettings('etcdPort'),
         path: configuration.readSettings('etcdKeysPath'),
         method: 'GET'
     };
 
-    var req = https.request(httpsOptions, (res) => {
+    var req = http.request(httpOptions, (res) => {
         console.log(`statusCode: ${res.statusCode}`);
         console.log(`headers: ${res.headers}`);
         res.setEncoding('utf8');
@@ -103,8 +108,8 @@ app.on('ready', function () {
     });
 
     mainWindow.webContents.on('did-finish-load', function () {
-        var etcdConnectionUrl = 'https://' +
-            configuration.readSettings('etcdBaseUrl') +
+        var etcdConnectionUrl = (configuration.readSettings('etcdHttps') ? 'https:' : 'http:') + '//' +
+            configuration.readSettings('etcdHostname') + ':' + configuration.readSettings('etcdPort') +
             configuration.readSettings('etcdKeysPath');
 
         mainWindow.webContents.send('set-etcd-connection-url', etcdConnectionUrl);
