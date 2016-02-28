@@ -42,6 +42,69 @@ var mainWindow = null;
  */
 var configuration = require('./configuration');
 
+/**
+ * Generate default options for the http request.
+ *
+ * @returns {{protocol: string, hostname: *, port: *}}
+ */
+function etcdHttpOptions() {
+    return {
+        protocol: configuration.readSettings('etcdHttps') ? 'https:' : 'http:',
+        hostname: configuration.readSettings('etcdHostname'),
+        port: configuration.readSettings('etcdPort')
+    };
+}
+
+/**
+ * Get value for etcd key by path.
+ *
+ * @param keyPath
+ * @param callback Callback to fire with the data from response once it is complete.
+ * @returns {http.ClientRequest}
+ */
+function etcdGetKey(keyPath, callback) {
+    var dataRecv = [];
+    var httpOptions = etcdHttpOptions();
+
+    httpOptions.method = 'GET';
+
+    if (typeof(keyPath) == 'undefined' || !keyPath) {
+        httpOptions.path = configuration.readSettings('etcdKeysPath');
+    }
+    else {
+        if (keyPath.indexOf('/') == 0) {
+            httpOptions.path = configuration.readSettings('etcdKeysPath') + keyPath;
+        }
+        else {
+            httpOptions.path = configuration.readSettings('etcdKeysPath') + '/' + keyPath;
+        }
+    }
+
+    var req = http.request(httpOptions, (res) => {
+        console.log(`statusCode: ${res.statusCode}`);
+        console.log(`headers: ${res.headers}`);
+        res.setEncoding('utf8');
+
+        res.on('data', (chunk) => {
+            //console.log(`BODY: ${chunk}`);
+            dataRecv.push(chunk);
+        });
+
+        res.on('end', () => {
+            console.log('No more data in response.');
+            callback(dataRecv.join(''));
+        })
+    });
+
+    req.on('error', (e) => {
+        console.log(`Got error: ${e.message}`);
+    });
+
+    req.end();
+
+    return req
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 app.on('ready', function () {
@@ -64,34 +127,6 @@ app.on('ready', function () {
         configuration.saveSettings('etcdKeysPath', '/v2/keys');
     }
 
-    var httpOptions = {
-        protocol: configuration.readSettings('etcdHttps') ? 'https:' : 'http:',
-        hostname: configuration.readSettings('etcdHostname'),
-        port: configuration.readSettings('etcdPort'),
-        path: configuration.readSettings('etcdKeysPath'),
-        method: 'GET'
-    };
-
-    var req = http.request(httpOptions, (res) => {
-        console.log(`statusCode: ${res.statusCode}`);
-        console.log(`headers: ${res.headers}`);
-        res.setEncoding('utf8');
-
-        res.on('data', (chunk) => {
-            console.log(`BODY: ${chunk}`);
-        });
-
-        res.on('end', () => {
-            console.log('No more data in response.')
-        })
-    });
-
-    req.on('error', (e) => {
-        console.log(`Got error: ${e.message}`);
-    });
-
-    req.end();
-
     app.dock.bounce();
 
     // Load the index.html of the app.
@@ -113,6 +148,10 @@ app.on('ready', function () {
             configuration.readSettings('etcdKeysPath');
 
         mainWindow.webContents.send('set-etcd-connection-url', etcdConnectionUrl);
+
+        etcdGetKey(null, (data) => {
+            mainWindow.webContents.send('set-etcd-raw-content', data);
+        });
     });
 });
 

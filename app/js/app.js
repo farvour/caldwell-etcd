@@ -57,6 +57,10 @@ ipc.on('set-etcd-connection-url', function (e, url) {
     $('#etcd-connection-url').text(url);
 });
 
+ipc.on('set-etcd-raw-content', function (e, text) {
+    $('#etcd-raw-content').text(text);
+});
+
 $(document).ready(function () {
     console.log("Main window DOM is ready!");
 
