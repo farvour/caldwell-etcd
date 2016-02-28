@@ -22,7 +22,7 @@ var App = {
     /**
      * Show the "about" window.
      */
-    about: function () {
+    about: () => {
         ipc.send('open-about-dialog');
     },
 
@@ -31,7 +31,7 @@ var App = {
      *
      * @param anchor
      */
-    cd: function (anchor) {
+    cd: (anchor) => {
         anchor = $(anchor);
 
         $('#left-nav li').removeClass('active');
@@ -48,20 +48,20 @@ var App = {
      *
      * @param path
      */
-    setPath: function (path) {
+    setPath: (path) => {
         this['address-bar'].set(path);
     }
 };
 
-ipc.on('set-etcd-connection-url', function (e, url) {
+ipc.on('set-etcd-connection-url', (e, url) => {
     $('#etcd-connection-url').text(url);
 });
 
-ipc.on('set-etcd-raw-content', function (e, text) {
+ipc.on('set-etcd-raw-content', (e, text) => {
     $('#etcd-raw-content').text(text);
 });
 
-$(document).ready(function () {
+$(document).ready(() => {
     console.log("Main window DOM is ready!");
 
     //var folder = new folder_view.Folder($('#right-content-value'));
